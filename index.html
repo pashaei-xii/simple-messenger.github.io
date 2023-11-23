@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Messenger</title>
+  <style>
+    /* Add your styles here */
+  </style>
+</head>
+<body>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="m" autocomplete="off" /><button>Send</button>
+  </form>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    $(function () {
+      const socket = io();
+      const form = $('form');
+      const input = $('#m');
+      const messages = $('#messages');
+
+      form.submit(function (e) {
+        e.preventDefault();
+        if (input.val()) {
+          socket.emit('chat message', input.val());
+          input.val('');
+        }
+        return false;
+      });
+
+      socket.on('chat message', function (msg) {
+        messages.append($('<li>').text(msg));
+      });
+    });
+  </script>
+</body>
+</html>
